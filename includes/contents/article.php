@@ -38,7 +38,9 @@
 		</div>
 		<div id="list_btns" style="height:22px; width:100%; margin-bottom:15px; position:relative;">
 			<!--a href="javascript:" onclick=location.href='/?inc=list&category=<?=$category_info['code']?>&page=<?=$current_page?>' class="btn1" style="position:relative; float:left; display:inline-block; margin:0; top:0;">목록</a-->
-			<?if($MEM['level'] == 99 || $writer_info['idx'] == $MEM['idx']){?><a href="javascript:" id="delete_article" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">삭제</a><a href="/?inc=modify&idx=<?=$PMLIST['IDX']?>" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">수정</a><?}?><?if($MEM['idx']){?><a href="/?inc=write&category=<?=$category_info['code']?>" id="write_article" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">글쓰기</a><?}?>
+			<?if($MEM['level'] == 99 || $writer_info['idx'] == $MEM['idx']){?><a href="javascript:" id="delete_article" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">삭제</a><a href="/?inc=modify&idx=<?=$PMLIST['IDX']?>" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">수정</a><?}?>
+			<? if(!$_SESSION['mem_user']) {?><a href="/?inc=write&category=<?=$category_info['code']?>" id="write_article" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">글쓰기</a><?}?>
+			<!-- if($MEM['idx']) !-->
 		</div>
 		<!--div class="contents_box3">
 			<a href="javascript:" id="recommend" class="rec_box"><img src="/images/heart1.jpg" alt="" /><font id="recommend_count"><?=number_format($board_info['recommend_count'])?></font><span>추천</span></a><a href="javascript:" id="not_recommend" class="rec_box"><img src="/images/heart2.jpg" alt="" /><font id="not_recommend_count"><?=number_format($board_info['unreco_count'])?></font><span>비추천</span></a>

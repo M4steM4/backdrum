@@ -1,9 +1,11 @@
-<?if(!$MEM['idx']){?><script>alert('로그인 후 이용이 가능합니다.'); history.back();</script><?exit;}
-
+<?if(!$MEM['idx']){?><script>alert('로그인 후 이용이 가능합니다.'); history.back();</script>
+<?exit;} else if ($_SESSION['mem_user']) { ?>
+<script>alert('유저는 글을 작성할 수 없습니다.'); history.back();</script>
+<? exit;}
 // category가 있을 경우, category 정보 받아두기
 if($PMLIST['CATEGORY'] != 'all'){
 	$category_qry = mysqli_query($connect,"SELECT * FROM category WHERE code = '".$PMLIST['CATEGORY']."'");
-	if(mysqli_num_rows($category_qry) > 0){
+	if(mysqli_num_rows($category_qry) > 0) {
 		$category_info = mysqli_fetch_array($category_qry);
 	}
 }?>
