@@ -1,7 +1,7 @@
 <?php
 require_once ("connect.php");
 require_once ("detailpage_query.php");
-?>	
+?>
 
 	<!DOCTYPE html>
 	<html>
@@ -26,9 +26,9 @@ require_once ("detailpage_query.php");
 				<a href="/mobile" class="brand-logo"><img src="http://jjaltoon.backdrum.net/images/logo.png" width="80px"></a>
 				<a onclick="history.back()"  class="button-collapse"><i class="material-icons grey-text">arrow_back</i></a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down ">
-					<li><a href="sass.html" class="black-text">Sass</a></li>
-					<li><a href="badges.html">Components</a></li>
-					<li><a href="collapsible.html">JavaScript</a></li>
+					<li style = "display:none;"><a href="sass.html" class="black-text">Sass</a></li>
+					<li style = "display:none;"><a href="badges.html">Components</a></li>
+					<li style = "display:none;"><a href="collapsible.html">JavaScript</a></li>
 				</ul>
 				<ul class="side-nav" id="mobile-demo">
 
@@ -45,7 +45,7 @@ require_once ("detailpage_query.php");
 					<li><a href="collapsible.html"><span class=" ingi-num blue-text">10</span>  사쿠라 유이 파해치기</a></li>
 				</ul>
 			</div>
-			
+
 		</nav>
 		<ul id="slide-out" class="side-nav">
 			<li><div class="user-view">
@@ -65,10 +65,18 @@ require_once ("detailpage_query.php");
 		<div id="test1" class="col s12">
 
 			<ul class="collection">
-				<li class="collection-item col s3 list-name"><?echo $data[category_title]; ?>
+				<li class="collection-item col s3 list-name">
+					<?
+						$spare = explode("|", $data[category_title]);
+						$category_title = array_unique($spare);
+						$count = count($category_title);
+						for($a=0;$a<$count;$a++) {
+							echo $category_title[$a] . ' ';
+						}
+					?>
 					<li class="collection-item no-padding list-name-highligh"></li>
 
-				</li> 
+				</li>
 
 				<li class="collection-item no-border-bottom img-card-box">
 					<div class="row no-margin">
@@ -101,7 +109,7 @@ require_once ("detailpage_query.php");
 							<img src="http://jjaltoon.backdrum.net/uploaded/board/<? echo $next_data[image]; ?>" width="100%">
 							<span> <? echo $next_data[title]; ?></span>
 						</div>
-						
+
 					</div>
 				</li>
 			</ul>
@@ -111,12 +119,11 @@ require_once ("detailpage_query.php");
 		<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-		<script type="text/javascript">  
+		<script type="text/javascript">
 			$(document).ready(function(){
 				$('ul.tabs').tabs();
 				$(".button-collapse").sideNav();
 			});
 		</script>
 	</body>
-	</html>  
-
+	</html>

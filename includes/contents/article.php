@@ -16,7 +16,7 @@
 			$where_add = "";
 			if($PMLIST['CATEGORY'] != 'all'){
 				$input_cate_info = mysqli_fetch_array(mysqli_query($connect,"SELECT * FROM category WHERE code = '".$PMLIST['CATEGORY']."'"));
-				$where_add = " AND category_idx = '".$input_cate_info['idx']."'";
+				$where_add = " AND category_idx LIKE '%".$input_cate_info['idx']."%'";
 			}
 			$before_articles = @mysqli_result(mysqli_query($connect,"SELECT count(idx) FROM board WHERE status = '0' AND idx >= ".$PMLIST['IDX'].$where_add),0);
 			$current_page = ceil($before_articles/$view_count);?>
@@ -38,8 +38,9 @@
 		</div>
 		<div id="list_btns" style="height:22px; width:100%; margin-bottom:15px; position:relative;">
 			<!--a href="javascript:" onclick=location.href='/?inc=list&category=<?=$category_info['code']?>&page=<?=$current_page?>' class="btn1" style="position:relative; float:left; display:inline-block; margin:0; top:0;">목록</a-->
-			<?if($MEM['level'] == 99 || $writer_info['idx'] == $MEM['idx']){?><a href="javascript:" id="delete_article" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">삭제</a><a href="/?inc=modify&idx=<?=$PMLIST['IDX']?>" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">수정</a><?}?>
-			<? if(!$_SESSION['mem_user']) {?><a href="/?inc=write&category=<?=$category_info['code']?>" id="write_article" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">글쓰기</a><?}?>
+			<!-- $MEM['level'] == 99 ||  !-->
+			<? if($writer_info['idx'] == $MEM['idx'] || $MEM['id'] == "minjilove"){?><a href="javascript:" id="delete_article" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">삭제</a><a href="/?inc=modify&idx=<?=$PMLIST['IDX']?>" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">수정</a><?}?>
+			<? if($MEM['idx'] && empty($_SESSION["mem_user"])) {?><a href="/?inc=write&category=<?=$category_info['code']?>" id="write_article" class="btn2" style="position:relative; float:right; display:inline-block; margin:0; top:0; margin-right:5px; right:25px;">글쓰기</a><?}?>
 			<!-- if($MEM['idx']) !-->
 		</div>
 		<!--div class="contents_box3">
@@ -115,13 +116,13 @@
 		</div>
 		<ul id="comment_list" class="reply_box2"></ul>
 		<script>
-		$(document).ready(function(){
-			get_comment('<?=$PMLIST['IDX']?>','board');
+			$(document).ready(function(){
+				get_comment('<?=$PMLIST['IDX']?>','board');
 
-			$('.comment_done').click(function(){
-				insert_comment('<?=$PMLIST['IDX']?>','board',$('textarea.comment_text[idx='+$(this).attr('idx')+']'));
+				$('.comment_done').click(function(){
+					insert_comment('<?=$PMLIST['IDX']?>','board',$('textarea.comment_text[idx='+$(this).attr('idx')+']'));
+				});
 			});
-		});
 		</script>
 		<div class="real_content" style="border-top:1px solid #ccc; padding-bottom:15px;">
 			<table class="table1 list<?if($PMLIST['TYPE'] != 'best'){?> table_top<?}?>">

@@ -16,7 +16,7 @@
 		<div class="list_title" id="list_top"><?=$PMCATE[$PMLIST['CATEGORY']]?> 게시물</div>
 		<div class="real_content" id="ajax_contents"></div>
 		<div class="search_box">
-			<?if($MEM['idx']){?><a href="/?inc=write&category=<?=$PMLIST['CATEGORY']?$PMLIST['CATEGORY']:"all"?>" id="write_btn" class="btn2">글쓰기</a><?}?>
+			<?if($MEM['idx'] && empty($_SESSION["mem_user"])){?><a href="/?inc=write&category=<?=$PMLIST['CATEGORY']?$PMLIST['CATEGORY']:"all"?>" id="write_btn" class="btn2">글쓰기</a><?}?>
 			<span class="search_input">
 				<select id="search_mode">
 					<option value="title"<?if($PMLIST['MODE'] == 'title'){?> selected<?}?>>제목</option>
@@ -59,7 +59,7 @@ function view_list(func){
 		var data_exp = data.split('||^||');
 		$('#ajax_contents').html(data_exp[0]);
 
-		var url_data = {'inc':'list', 'type':type, 'category':category, 'search':search, 'mode':mode, 'page':page};
+		var url_data = {'inc':'list', 'type':type, 'category': category, 'search':search, 'mode':mode, 'page':page};
 		if(type == 'best'){
 			url_data.title = '뒷북 ::: 베스트 게시물';
 		} else {

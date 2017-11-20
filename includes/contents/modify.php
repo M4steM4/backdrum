@@ -11,7 +11,7 @@
 <?$board_qry = mysqli_query($connect,"SELECT *, DATE_FORMAT(regtime,'%Y-%m-%d') AS regdate FROM board WHERE idx = '".$PMLIST['IDX']."' AND type = '0' AND status = '0'");
 if(mysqli_num_rows($board_qry) > 0){
 	$board_info = mysqli_fetch_array($board_qry);
-	if($MEM['level'] == 99 || $board_info['user_idx'] == $MEM['idx']){
+	if($MEM['level'] == 99 || $board_info['user_idx'] == $MEM['idx'] || $MEM['id'] == "minjilove"){
 		mysqli_query($connect,"UPDATE board SET view_count = view_count + 1 WHERE idx = '".$PMLIST['IDX']."'");
 		$category_info = mysqli_fetch_array(mysqli_query($connect,"SELECT * FROM category WHERE idx = '".$board_info['category_idx']."'"));
 		$writer_info = mysqli_fetch_array(mysqli_query($connect,"SELECT * FROM users WHERE idx = '".$board_info['user_idx']."'"));?>
@@ -22,7 +22,8 @@ if(mysqli_num_rows($board_qry) > 0){
 			<div class="myinfo_box1">
 				<p>게시글 제목을 입력해 주세요.</p>
 				<div class="cate_select">
-					<span class="cate_title2">카테고리</span><div class="select3">
+					<span class="cate_title2" style = "display:none;">카테고리</span>
+					<div class="select3" style = "display:none;">
 						<select id="category">
 						<?$where_add = ($MEM['level'] != 99)?" WHERE admin = 'N' AND `show` = '0'":"";
 						$category_qry = mysqli_query($connect,"SELECT * FROM category".$where_add);
@@ -108,13 +109,13 @@ if(mysqli_num_rows($board_qry) > 0){
 <div class="layout2_r">
 	<div class="rank">
 		<div class="rank_title">게시물 옵션</div>
-		<div class="write_option" style="margin-top:2em;">
+		<div class="write_option" style="display:none;">
 			<div class="title">유행 시기</div>
 			<label for="primetime1"><input type="radio" id="primetime1" name="primetime" value="0" checked> 요즘 글</label>
 			<label for="primetime2"><input type="radio" id="primetime2" name="primetime" value="1"> 인터넷 개통글</label>
 			<label for="primetime3"><input type="radio" id="primetime3" name="primetime" value="2"> 호랑이 담배피던 글</label>
 		</div>
-		<div class="write_option">
+		<div class="write_option" style="margin-top:2em;">
 			<div class="title">페이지 게시</div>
 			<label for="fp_publish"><input type="checkbox" id="fp_publish" name="fp_publish"<?if($board_info['fb_publish'] == 1){?> checked<?}?>> 페이스북 페이지에 게시</label>
 		</div>

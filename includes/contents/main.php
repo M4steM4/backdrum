@@ -51,12 +51,12 @@ function summary_timing(){
 <div style="clear:both;"></div>
 <div class="layout2_d">
 	<div class="l2d">
-		<div class="l_title">인터넷 개통글</div>
+		<div class="l_title">전체기사</div>
 		<ol class="l2_list" thumb_idx="1">
 			<a class="lart">
 				<div class="thumb" thumb_idx="1"></div>
 			</a>
-			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND primetime = '1' ORDER BY regdate DESC, view_count DESC LIMIT 10");
+			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' ORDER BY regdate DESC, view_count DESC LIMIT 5");
 			if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
 				$img_exp = explode(',',$bdata['image']);
 				if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
@@ -69,12 +69,12 @@ function summary_timing(){
 		</ol>
 	</div>
 	<div class="l2d">
-		<div class="l_title">핫하다 못해 타버려뿟따</div>
+		<div class="l_title">유머관련</div>
 		<ol class="l2_list" thumb_idx="2">
 			<a class="lart">
 				<div class="thumb" thumb_idx="2"></div>
 			</a>
-			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' ORDER BY view_count DESC LIMIT 10");
+			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND category_idx LIKE '%1%' ORDER BY view_count DESC LIMIT 5");
 			if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
 				$img_exp = explode(',',$bdata['image']);
 				if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
@@ -87,7 +87,7 @@ function summary_timing(){
 		</ol>
 	</div>
 	<div class="l2d">
-		<div class="l_title">호랑이 담배피던 글</div>
+		<div class="l_title">연애관련</div>
 		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <ins class="adsbygoogle"
      style="display:block; text-align:center;"
@@ -102,7 +102,7 @@ function summary_timing(){
 			<a class="lart">
 				<div class="thumb" thumb_idx="3"></div>
 			</a>
-			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND primetime = '2' ORDER BY view_count DESC LIMIT 10");
+			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND category_idx LIKE '%2%' ORDER BY view_count DESC LIMIT 5");
 			if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
 				$img_exp = explode(',',$bdata['image']);
 				if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
@@ -115,12 +115,86 @@ function summary_timing(){
 		</ol>
 	</div>
 	<div class="l2d">
-		<div class="l_title">다시봐도 재밌어 ㅋ</div>
+		<div class="l_title">게임관련</div>
 		<ol class="l2_list" thumb_idx="4">
 			<a class="lart">
 				<div class="thumb" thumb_idx="4"></div>
 			</a>
-			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' ORDER BY RAND() LIMIT 10");
+			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND category_idx LIKE '%3%' ORDER BY view_count DESC LIMIT 5");
+			if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
+				$img_exp = explode(',',$bdata['image']);
+				if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
+					$image_url = $img_exp[0];
+				} else {
+					$image_url = "/uploaded/board/".$img_exp[0];
+				}?>
+			<li class="lart_txt_title" thumb="<?=$image_url?>"><a href="/?inc=article&idx=<?=$bdata['idx']?>"><?=$bdata['title']?></a></li>
+			<?}}?>
+		</ol>
+	</div>
+</div>
+<div class="layout2_d">
+	<div class="l2d">
+		<div class="l_title">사건사고</div>
+		<ol class="l2_list" thumb_idx="5">
+			<a class="lart">
+				<div class="thumb" thumb_idx="5"></div>
+			</a>
+			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND category_idx LIKE '%4%' ORDER BY view_count DESC LIMIT 5");
+			if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
+				$img_exp = explode(',',$bdata['image']);
+				if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
+					$image_url = $img_exp[0];
+				} else {
+					$image_url = "/uploaded/board/".$img_exp[0];
+				}?>
+			<li class="lart_txt_title" thumb="<?=$image_url?>"><a href="/?inc=article&idx=<?=$bdata['idx']?>"><?=$bdata['title']?></a></li>
+			<?}}?>
+		</ol>
+	</div>
+	<div class="l2d">
+		<div class="l_title">애완동물</div>
+		<ol class="l2_list" thumb_idx="6">
+			<a class="lart">
+				<div class="thumb" thumb_idx="6"></div>
+			</a>
+			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND category_title LIKE '%애완동물%' ORDER BY view_count DESC LIMIT 5");
+			if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
+				$img_exp = explode(',',$bdata['image']);
+				if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
+					$image_url = $img_exp[0];
+				} else {
+					$image_url = "/uploaded/board/".$img_exp[0];
+				}?>
+			<li class="lart_txt_title" thumb="<?=$image_url?>"><a href="/?inc=article&idx=<?=$bdata['idx']?>"><?=$bdata['title']?></a></li>
+			<?}}?>
+		</ol>
+	</div>
+	<div class="l2d">
+		<div class="l_title">여자관련</div>
+		<ol class="l2_list" thumb_idx="7">
+			<a class="lart">
+				<div class="thumb" thumb_idx="7"></div>
+			</a>
+			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND category_idx LIKE '%6%' ORDER BY view_count DESC LIMIT 5");
+			if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
+				$img_exp = explode(',',$bdata['image']);
+				if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
+					$image_url = $img_exp[0];
+				} else {
+					$image_url = "/uploaded/board/".$img_exp[0];
+				}?>
+			<li class="lart_txt_title" thumb="<?=$image_url?>"><a href="/?inc=article&idx=<?=$bdata['idx']?>"><?=$bdata['title']?></a></li>
+			<?}}?>
+		</ol>
+	</div>
+	<div class="l2d">
+		<div class="l_title">기타등등</div>
+		<ol class="l2_list" thumb_idx="8">
+			<a class="lart">
+				<div class="thumb" thumb_idx="8"></div>
+			</a>
+			<?$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0' AND category_idx LIKE '%7%' ORDER BY view_count DESC LIMIT 5");
 			if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
 				$img_exp = explode(',',$bdata['image']);
 				if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){

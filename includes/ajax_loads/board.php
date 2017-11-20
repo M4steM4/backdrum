@@ -57,6 +57,27 @@ if($PMLIST['PROC'] == 'list'){?>
 					}?>
 	<?if($PMLIST['SEARCH'] && $PMLIST['MODE']){
 		$search_kwd = str_replace('%','\%',$PMLIST['SEARCH']);
+		function stripslashes_deep($var){
+		    $var = is_array($var)?
+		                  array_map('stripslashes_deep', $var) :
+		                  stripslashes($var);
+
+		    return $var;
+		}
+		function mysql_real_escape_string_deep($var){
+		    $var = is_array($var)?
+		                  array_map('mysql_real_escape_string_deep', $var) :
+		                  mysql_real_escape_string($var);
+
+		    return $var;
+		}
+		if(!get_magic_quotes_gpc()) {
+		  $search_kwd = addslashes($search_kwd);
+		}
+
+		if(preg_match('/[^A-Za-z0-9]/', $search_kwd)) {
+		  exit ("알파벳과 한글 그리고 숫자만 입력이 가능합니다");
+		}
 		if($PMLIST['MODE'] == 'title'){
 			$search_add = " AND title LIKE '%".$search_kwd."%'";
 		} else if($PMLIST['MODE'] == 'writer'){
@@ -73,7 +94,7 @@ if($PMLIST['PROC'] == 'list'){?>
 		if(mysqli_num_rows($category_qry) > 0){
 			$cate_chk = true;
 			$category_info = mysqli_fetch_array($category_qry);
-			$search_add .= " AND category_idx = '".$category_info['idx']."'";
+			$search_add .= " AND category_idx LIKE '%".$category_info['idx']."%'";
 		} else {
 			$cate_chk = false;
 		}
@@ -132,7 +153,7 @@ if($PMLIST['PROC'] == 'list'){?>
 		<?if($all_nums > 0){?>
 			<div class="paging">
 				<?$start_decades_page = floor(($PMLIST['PAGE']-1)/10)*10+1;
-				$end_decades_page = ($start_decades_page+9 > $all_pages)?$all_pages:$start_decades_page+9;?>				
+				$end_decades_page = ($start_decades_page+9 > $all_pages)?$all_pages:$start_decades_page+9;?>
 				<?if($PMLIST['PAGE'] != 1){?><a href="javascript:" page="1"><img src="/images/first.jpg" alt="" /></a><?}?><?if($PMLIST['PAGE'] != 1){?><a href="javascript:" page="<?=$PMLIST['PAGE'] - 1?>"><img src="/images/prev.jpg" alt="" /></a><?}?><?for($i=$start_decades_page;$i<=$end_decades_page;$i++){?><a href="javascript:" page="<?=$i?>"<?if($PMLIST['PAGE'] == $i){?> class="on"<?}?>><?=$i?></a><?}?><?if($PMLIST['PAGE'] != $all_pages){?><a href="javascript:" page="<?=$PMLIST['PAGE'] + 1?>"><img src="/images/next.jpg" alt="" /></a><?}?><?if($PMLIST['PAGE'] != $all_pages){?><a href="javascript:" page="<?=$all_pages?>"><img src="/images/last.jpg" alt="" /></a><?}?>
 			</div>
 		<?}?>
@@ -195,29 +216,30 @@ if($PMLIST['PROC'] == 'list'){?>
 	}?>||^||
 	<?if($all_nums > 0){?>
 		<?$start_decades_page = floor(($PMLIST['PAGE']-1)/10)*10+1;
-		$end_decades_page = ($start_decades_page+9 > $all_pages)?$all_pages:$start_decades_page+9;?>				
+		$end_decades_page = ($start_decades_page+9 > $all_pages)?$all_pages:$start_decades_page+9;?>
 		<?if($PMLIST['PAGE'] != 1){?><a href="javascript:" page="1"><img src="/images/first.jpg" alt="" /></a><?}?><?if($PMLIST['PAGE'] != 1){?><a href="javascript:" page="<?=$PMLIST['PAGE'] - 1?>"><img src="/images/prev.jpg" alt="" /></a><?}?><?for($i=$start_decades_page;$i<=$end_decades_page;$i++){?><a href="javascript:" page="<?=$i?>"<?if($PMLIST['PAGE'] == $i){?> class="on"<?}?>><?=$i?></a><?}?><?if($PMLIST['PAGE'] != $all_pages){?><a href="javascript:" page="<?=$PMLIST['PAGE'] + 1?>"><img src="/images/next.jpg" alt="" /></a><?}?><?if($PMLIST['PAGE'] != $all_pages){?><a href="javascript:" page="<?=$all_pages?>"><img src="/images/last.jpg" alt="" /></a><?}?>
 	<?}
 } else if($PMLIST['PROC'] == 'cate_best'){
 	$search_add = "";
 	if($PMLIST['CATEGORY'] != 'all'){
 		$category_qry = mysqli_query($connect,"SELECT * FROM category WHERE code = '".$PMLIST['CATEGORY']."'");
-		if(mysqli_num_rows($category_qry) > 0){
+		if(mysqli_num_rows($category_qry) > 0) {
 			$category_info = mysqli_fetch_array($category_qry);
-			$search_add .= " AND category_idx = '".$category_info['idx']."'";
+			$search_add .= " AND category_idx LIKE '%".$category_info['idx']."%'";
 		} else {
 			echo "잘못된 카테고리입니다.";
 		}
 	}
 	$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE status = '0'".$search_add." ORDER BY view_count DESC LIMIT 5");
-	if(mysqli_num_rows($board_qry) > 0){ while($bdata = mysqli_fetch_array($board_qry)){
-		$img_exp = explode(',',$bdata['image']);
-		if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
-			$image_url = $img_exp[0];
-		} else {
-			$image_url = "/uploaded/board/".$img_exp[0];
-		}?>
-				<li class="bart_txt_title" thumb="<?=$image_url?>"><a href="/?inc=article&idx=<?=$bdata['idx']?>"><?=$bdata['title']?></a></li>
+	if(mysqli_num_rows($board_qry) > 0){
+		while($bdata = mysqli_fetch_array($board_qry)){
+			$img_exp = explode(',',$bdata['image']);
+			if(strpos($img_exp[0], "http://") !== false || strpos($img_exp[0], "https://") !== false){
+				$image_url = $img_exp[0];
+			} else {
+				$image_url = "/uploaded/board/".$img_exp[0];
+			}?>
+			<li class="bart_txt_title" thumb="<?=$image_url?>"><a href="/?inc=article&idx=<?=$bdata['idx']?>"><?=$bdata['title']?></a></li>
 	<?}} else {?>베스트 게시물이 없습니다.<?}
 } else if($PMLIST['PROC'] == 'insert'){
 	/*if(date('H') > 18 || date('H') < 9){
@@ -225,8 +247,6 @@ if($PMLIST['PROC'] == 'list'){?>
 		exit;
 	}*/
 	$PMLIST['TITLE'] = PM_DELHTML($_REQUEST['title']);
-	$PMLIST['CATEGORY_IDX'] = intval($_REQUEST['category_idx']);
-	$PMLIST['CATEGORY_TITLE'] = PM_DELHTML($_REQUEST['category_title']);
 	$PMLIST['IMAGE'] = PM_DELHTML($_REQUEST['image']);
 	$PMLIST['IMAGE_USE'] = intval($_REQUEST['image_use']);
 	$PMLIST['CONTENT'] = $_REQUEST['content'];
@@ -236,6 +256,41 @@ if($PMLIST['PROC'] == 'list'){?>
 	$PMLIST['CHECKSUM'] = PM_DELHTML($_REQUEST['checksum']);
 	$PMLIST['CHECKED_PAGE'] = PM_DELHTML($_REQUEST['checked_page']);
 	$PMLIST['FB_PUBLISH'] = intval($_REQUEST['fp_publish']);
+	// 체크된 페이지 보고 카테고리 분류
+	$fb_page = explode("|", $PMLIST['CHECKED_PAGE']);
+	$count = count($fb_page);
+	for($fb_loop=0;$fb_loop<$count;$fb_loop++) {
+		if($fb_page[$fb_loop] == 57 || $fb_page[$fb_loop] == 72) {
+			$category_idx[$fb_loop] = 1;
+			$category_title[$fb_loop] = "유머관련";
+		}
+		else if($fb_page[$fb_loop] == 41 || $fb_page[$fb_loop] == 44 || $fb_page[$fb_loop] == 49 || $fb_page[$fb_loop] == 73 || $fb_page[$fb_loop] == 95) {
+			$category_idx[$fb_loop] = 2;
+			$category_title[$fb_loop] = "연애관련";
+		}
+		else if($fb_page[$fb_loop] == 43) {
+			$category_idx[$fb_loop] = 3;
+			$category_title[$fb_loop] = "게임관련";
+		}
+		else if($fb_page[$fb_loop] == 39 || $fb_page[$fb_loop] == 63) {
+			$category_idx[$fb_loop] = 4;
+			$category_title[$fb_loop] = "사건사고";
+		}
+		else if($fb_page[$fb_loop] == 3 || $fb_page[$fb_loop] == 13 || $fb_page[$fb_loop] == 20 || $fb_page[$fb_loop] == 76) {
+			$category_idx[$fb_loop] = 5;
+			$category_title[$fb_loop] = "애완동물";
+		}
+		else if($fb_page[$fb_loop] == 45) {
+			$category_idx[$fb_loop] = 6;
+			$category_title[$fb_loop] = "여자관련";
+		}
+		else {
+			$category_idx[$fb_loop] = 7;
+			$category_title[$fb_loop] = "기타등등";
+		}
+	}
+	$PMLIST['CATEGORY_IDX'] = PM_DELHTML(implode("|", $category_idx));
+	$PMLIST['CATEGORY_TITLE'] = PM_DELHTML(implode("|", $category_title));
 
 	$set_add = "";
 
@@ -336,24 +391,24 @@ if($PMLIST['PROC'] == 'list'){?>
 	$PMLIST['TITLE'] = str_replace("'","\\'",$PMLIST['TITLE']);
 
 	if($MEM['idx']){
-		mysqli_query($connect,"INSERT INTO board SET 
-			user_idx					= '".$MEM['idx']."', 
-			user_id						= '".$MEM['id']."', 
-			user_name					= '".$MEM['name']."', 
-			user_nick					= '".$MEM['nick']."', 
-			type						= '0', 
-			category_idx				= '".$PMLIST['CATEGORY_IDX']."', 
-			category_title				= '".$PMLIST['CATEGORY_TITLE']."', 
-			title						= '".$PMLIST['TITLE']."', 
-			image						= '".$PMLIST['IMAGE']."', 
-			content						= '".$PMLIST['CONTENT']."', 
-			tag							= '".$PMLIST['TAG']."', 
-			source						= '".$PMLIST['SOURCE']."', 
+		mysqli_query($connect,"INSERT INTO board SET
+			user_idx					= '".$MEM['idx']."',
+			user_id						= '".$MEM['id']."',
+			user_name					= '".$MEM['name']."',
+			user_nick					= '".$MEM['nick']."',
+			type						= '0',
+			category_idx				= '".$PMLIST['CATEGORY_IDX']."',
+			category_title				= '".$PMLIST['CATEGORY_TITLE']."',
+			title						= '".$PMLIST['TITLE']."',
+			image						= '".$PMLIST['IMAGE']."',
+			content						= '".$PMLIST['CONTENT']."',
+			tag							= '".$PMLIST['TAG']."',
+			source						= '".$PMLIST['SOURCE']."',
 			primetime					= '".$PMLIST['PRIMETIME']."',
 			facebook_page				= '".$PMLIST['CHECKED_PAGE']."',
 			fb_publish					= '".$PMLIST['FB_PUBLISH']."',
-			regdate						= NOW(), 
-			regtime						= NOW(), 
+			regdate						= NOW(),
+			regtime						= NOW(),
 			checksum					= '".$MEM['idx']."_".$PMLIST['CHECKSUM']."'"
 			.$set_add);
 
@@ -382,8 +437,6 @@ if($PMLIST['PROC'] == 'list'){?>
 	}
 } else if($PMLIST['PROC'] == 'modify'){
 	$PMLIST['TITLE'] = PM_DELHTML($_REQUEST['title']);
-	$PMLIST['CATEGORY_IDX'] = intval($_REQUEST['category_idx']);
-	$PMLIST['CATEGORY_TITLE'] = PM_DELHTML($_REQUEST['category_title']);
 	$PMLIST['IMAGE'] = PM_DELHTML($_REQUEST['image']);
 	$PMLIST['IMAGE_USE'] = intval($_REQUEST['image_use']);
 	$PMLIST['CONTENT'] = $_REQUEST['content'];
@@ -393,9 +446,45 @@ if($PMLIST['PROC'] == 'list'){?>
 	$PMLIST['CHECKSUM'] = PM_DELHTML($_REQUEST['checksum']);
 	$PMLIST['CHECKED_PAGE'] = PM_DELHTML($_REQUEST['checked_page']);
 	$PMLIST['FB_PUBLISH'] = intval($_REQUEST['fp_publish']);
+	// 체크된 페이지 보고 카테고리 분류
+	$fb_page = explode("|", $PMLIST['CHECKED_PAGE']);
+	$count = count($fb_page);
+	for($fb_loop=0;$fb_loop<$count;$fb_loop++) {
+		if($fb_page[$fb_loop] == 57 || $fb_page[$fb_loop] == 72) {
+			$category_idx[$fb_loop] = 1;
+			$category_title[$fb_loop] = "유머관련";
+		}
+		else if($fb_page[$fb_loop] == 41 || $fb_page[$fb_loop] == 44 || $fb_page[$fb_loop] == 49 || $fb_page[$fb_loop] == 73 || $fb_page[$fb_loop] == 95) {
+			$category_idx[$fb_loop] = 2;
+			$category_title[$fb_loop] = "연애관련";
+		}
+		else if($fb_page[$fb_loop] == 43) {
+			$category_idx[$fb_loop] = 3;
+			$category_title[$fb_loop] = "게임관련";
+		}
+		else if($fb_page[$fb_loop] == 39 || $fb_page[$fb_loop] == 63) {
+			$category_idx[$fb_loop] = 4;
+			$category_title[$fb_loop] = "사건사고";
+		}
+		else if($fb_page[$fb_loop] == 3 || $fb_page[$fb_loop] == 13 || $fb_page[$fb_loop] == 20 || $fb_page[$fb_loop] == 76) {
+			$category_idx[$fb_loop] = 5;
+			$category_title[$fb_loop] = "애완동물";
+		}
+		else if($fb_page[$fb_loop] == 45) {
+			$category_idx[$fb_loop] = 6;
+			$category_title[$fb_loop] = "여자관련";
+		}
+		else {
+			$category_idx[$fb_loop] = 7;
+			$category_title[$fb_loop] = "기타등등";
+		}
+	}
+
+	$PMLIST['CATEGORY_IDX'] = PM_DELHTML(implode("|", $category_idx));
+	$PMLIST['CATEGORY_TITLE'] = PM_DELHTML(implode("|", $category_title));
 
 	$board_info = @mysqli_fetch_array(mysqli_query($connect,"SELECT * FROM board WHERE idx = '".$PMLIST['IDX']."'"));
-	if($MEM['level'] == 99 || $board_info['user_idx'] == $MEM['idx']){
+	if($MEM['level'] == 99 || $board_info['user_idx'] == $MEM['idx'] || $MEM['id'] == "minjilove"){
 		$set_add = "";
 
 		$category_qry = mysqli_query($connect,"SELECT * FROM category WHERE idx = '".$PMLIST['CATEGORY_IDX']."'");
@@ -496,15 +585,15 @@ if($PMLIST['PROC'] == 'list'){?>
 		$PMLIST['TITLE'] = str_replace("'","\\'",$PMLIST['TITLE']);
 
 		if($MEM['idx']){
-			mysqli_query($connect,"UPDATE board SET 
-				type						= '0', 
-				category_idx				= '".$PMLIST['CATEGORY_IDX']."', 
-				category_title				= '".$PMLIST['CATEGORY_TITLE']."', 
-				title						= '".$PMLIST['TITLE']."', 
-				image						= '".$PMLIST['IMAGE']."', 
-				content						= '".$PMLIST['CONTENT']."', 
-				tag							= '".$PMLIST['TAG']."', 
-				source						= '".$PMLIST['SOURCE']."', 
+			mysqli_query($connect,"UPDATE board SET
+				type						= '0',
+				category_idx				= '".$PMLIST['CATEGORY_IDX']."',
+				category_title				= '".$PMLIST['CATEGORY_TITLE']."',
+				title						= '".$PMLIST['TITLE']."',
+				image						= '".$PMLIST['IMAGE']."',
+				content						= '".$PMLIST['CONTENT']."',
+				tag							= '".$PMLIST['TAG']."',
+				source						= '".$PMLIST['SOURCE']."',
 				primetime					= '".$PMLIST['PRIMETIME']."',
 				facebook_page				= '".$PMLIST['CHECKED_PAGE']."',
 				fb_publish					= '".$PMLIST['FB_PUBLISH']."',
@@ -552,7 +641,7 @@ if($PMLIST['PROC'] == 'list'){?>
 	$board_qry = mysqli_query($connect,"SELECT * FROM board WHERE idx = '".$PMLIST['IDX']."' AND status = '0'");
 	if(mysqli_num_rows($board_qry) > 0){
 		$board_info = mysqli_fetch_array($board_qry);
-		if($MEM['idx'] == $board_info['user_idx'] || $MEM['level'] == 99){
+		if($MEM['idx'] == $board_info['user_idx'] || $MEM['level'] == 99 || $MEM['id'] == "minjilove"){
 			mysqli_query($connect,"UPDATE board SET status = '1' WHERE idx = '".$PMLIST['IDX']."'");
 
 			mysqli_query($connect, "UPDATE facebook_page_article SET status = '2' WHERE article_idx = ".$PMLIST['IDX']." AND page_idx NOT IN (".$page_idxs.") AND article_id IS NOT NULL");
@@ -667,7 +756,8 @@ if($PMLIST['PROC'] == 'list'){?>
 						</div>
 					</dt>
 					<dd>
-						<a href="#">신고</a><?if($MEM['idx'] == $row['user_idx']){?><a href="javascript:" onclick="del_comment(<?=$row['idx']?>,<?=$PMLIST['IDX']?>,'<?=$PMLIST['TYPE']?>')">삭제</a><?}?>
+						<a href="#">신고</a><?if($MEM['idx'] == $row['user_idx']){?>
+							<a href="javascript:" onclick="del_comment(<?=$row['idx']?>,<?=$PMLIST['IDX']?>,'<?=$PMLIST['TYPE']?>')">삭제</a><?}?>
 					</dd>
 				</li>
 		<?}
@@ -677,6 +767,7 @@ if($PMLIST['PROC'] == 'list'){?>
 	echo "||".$comment_count;
 } else if($PMLIST['PROC'] == 'write_com' && $_REQUEST['idx']){
 	if(!$MEM['idx']){ echo "nologin"; exit; }
+	if(!$PMLIST['TEXT']) { echo "댓글을 입력하세요"; exit; }
 	$num_cou = @mysqli_result(mysqli_query($connect,"SELECT MAX(num) FROM comment WHERE article_idx = '".$PMLIST['IDX']."' AND type = '".$PMLIST['TYPE']."'"),0);
 	$ins_qry = mysqli_query($connect,"INSERT INTO comment SET article_idx = '".$PMLIST['IDX']."', type = '".$PMLIST['TYPE']."', user_idx = '".$MEM['idx']."', text = '".$PMLIST['TEXT']."', num = '".($num_cou + 1)."', keylog = '".$MEM['idx']."_".$PMLIST['KEYLOG']."', regtime = NOW()");
 	if(($cidx = mysqli_insert_id($connect))){

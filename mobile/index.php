@@ -36,9 +36,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 			<a href="/mobile" class="brand-logo"><img src="http://jjaltoon.backdrum.net/images/logo.png" width="80px"></a>
 			<a href="#" data-activates="mobile-demo " class="button-collapse"><i class="material-icons grey-text">menu</i></a>
 			<ul id="nav-mobile" class="right hide-on-med-and-down ">
-				<li><a href="sass.html" class="black-text">Sass</a></li>
-				<li><a href="badges.html">Components</a></li>
-				<li><a href="collapsible.html">JavaScript</a></li>
+				<li style = "display:none;"><a href="sass.html" class="black-text">Sass</a></li>
+				<li style = "display:none;"><a href="badges.html">Components</a></li>
+				<li style = "display:none;"><a href="collapsible.html">JavaScript</a></li>
 			</ul>
 			<ul class="side-nav" id="mobile-demo">
 
@@ -59,14 +59,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 		<div class="nav-content">
 			<ul class="tabs tabs-transparent blue">
-				<li class="tab"><a  href="#test1">전체기사</a></li>
-				<li class="tab"><a href="#test2">사회이슈</a></li>
-				<li class="tab"><a href="#test3">재밌는거</a></li>
-				<li class="tab"><a href="#test4">꿀팁정보</a></li>
-				<li class="tab"><a href="#test5">연예계 썰</a></li>
-				<li class="tab"><a href="#test6">리뷰&후기</a></li>
-				<li class="tab"><a href="#test7">사건사고</a></li>
-				<li class="tab"><a href="#test8">애완동물</a></li>
+				<li class="tab"><a href="#test1">전체기사</a></li>
+				<li class="tab"><a href="#test2">유머관련</a></li>
+				<li class="tab"><a href="#test3">연애관련</a></li>
+				<li class="tab"><a href="#test4">게임관련</a></li>
+				<li class="tab"><a href="#test5">사건사고</a></li>
+				<li class="tab"><a href="#test6">애완동물</a></li>
+				<li class="tab"><a href="#test7">여자관련</a></li>
+				<li class="tab"><a href="#test8">기타등등</a></li>
 			</ul>
 		</div>
 	</nav>
@@ -135,102 +135,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</a>
 			</li>
 		</ul>
-		<ul class="collection">
-			<li class="collection-item col s3 list-name">인터넷 개통글
-				<li class="collection-item no-padding list-name-highligh"></li>
-
-			</li>
-			<li class="collection-item img-card-box">
-				<div class="row no-margin">
-					<?php
-					while ($data =mysqli_fetch_array($internetgatong_query)){
-						?>
-						<div class="col s6" onclick="location.href='/mobile/detail.php?id=<? echo $data[idx]; ?>'">
-							<div class="thumbnail">
-								<img src="/uploaded/board/<?echo $data[image];
-								if($data[image]==""){
-									echo"defailt.png";
-								}
-								?>"  width="100%">
-							</div>
-							<p class="img-title jumjumjum"> <?echo $data[title];?><br/><span class="writer">
-								<i class="material-icons writer">edit</i> <?echo $data[user_nick];?>
-							</span></p>
-
-						</div>
-						<?php
-					}
-
-					?>
-
-
-
-				</div>
-			</li>
-
-		</ul>
-
-		<ul class="collection">
-			<li class="collection-item col s3 list-name">호랑이 담배피던 글
-				<li class="collection-item no-padding list-name-highligh"></li>
-
-			</li>
-			<li class="collection-item img-card-box">
-				<div class="row no-margin">
-					<?php
-					while ($data =mysqli_fetch_array($horang_query)){
-						?>
-						<div class="col s6" onclick="location.href='/mobile/detail.php?id=<? echo $data[idx]; ?>'">
-							<div class="thumbnail">
-								<img src="/uploaded/board/<?echo $data[image];
-								if($data[image]==""){
-									echo"defailt.png";
-								}
-								?>"  width="100%">
-							</div>
-							<p class="img-title jumjumjum"> <?echo $data[title];?><br/><span class="writer">
-								<i class="material-icons writer">edit</i> <?echo $data[user_nick];?>
-							</span></p>
-
-						</div>
-						<?php
-					}
-
-					?>
-				</div>
-			</li>
-		</ul>
-
-		<ul class="collection">
-			<li class="collection-item col s3 list-name">HOT하지 못해 타버려뿟다
-				<li class="collection-item no-padding list-name-highligh"></li>
-
-			</li>
-			<li class="collection-item img-card-box">
-				<div class="row no-margin">
-					<?php
-					while ($data =mysqli_fetch_array($hot_query)){
-						?>
-						<div class="col s6" onclick="location.href='/mobile/detail.php?id=<? echo $data[idx]; ?>'">
-							<div class="thumbnail">
-								<img src="/uploaded/board/<?echo $data[image];
-								if($data[image]==""){
-									echo"defailt.png";
-								}
-								?>"  width="100%">
-							</div>
-							<p class="img-title jumjumjum"> <?echo $data[title];?><br/><span class="writer">
-								<i class="material-icons writer">edit</i> <?echo $data[user_nick];?>
-							</span></p>
-
-						</div>
-						<?php
-					}
-
-					?>
-				</div>
-			</li>
-		</ul>
 
 	</div>
 	<div id="test2" class="col s12">
@@ -277,7 +181,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</li>
 			<li class="collection-item center">
-				<a class="grey-text" href="list.php?category=1&page=1&title=사회이슈">
+				<a class="grey-text" href="list.php?category=1&page=1&title=유머관련">
 					더보기
 				</a>
 			</li>
@@ -328,7 +232,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</li>
 			<li class="collection-item center">
-				<a class="grey-text" href="list.php?category=2&page=1&title=재밌는거">
+				<a class="grey-text" href="list.php?category=2&page=1&title=연애관련">
 					더보기
 				</a>
 			</li>
@@ -379,7 +283,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</li>
 			<li class="collection-item center">
-				<a class="grey-text" href="list.php?category=3&page=1&title=꿀팁정보">
+				<a class="grey-text" href="list.php?category=3&page=1&title=게임관련">
 					더보기
 				</a>
 			</li>
@@ -430,7 +334,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</li>
 			<li class="collection-item center">
-				<a class="grey-text" href="list.php?category=4&page=1&title=연애계 썰">
+				<a class="grey-text" href="list.php?category=4&page=1&title=사건사고">
 					더보기
 				</a>
 			</li>
@@ -481,7 +385,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</li>
 			<li class="collection-item center">
-				<a class="grey-text" href="list.php?category=5&page=1&title=리뷰&후기">
+				<a class="grey-text" href="list.php?category=5&page=1&title=애완동물">
 					더보기
 				</a>
 			</li>
@@ -532,7 +436,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</li>
 			<li class="collection-item center">
-				<a class="grey-text" href="list.php?category=6&page=1&title=사건사고">
+				<a class="grey-text" href="list.php?category=6&page=1&title=여자관련">
 					더보기
 				</a>
 			</li>
@@ -583,7 +487,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</li>
 			<li class="collection-item center">
-				<a class="grey-text" href="list.php?category=7&page=1&title=애완동물">
+				<a class="grey-text" href="list.php?category=7&page=1&title=기타등등">
 					더보기
 				</a>
 			</li>
